@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby1.9.3
+
+require 'harvested'
+require 'yaml'
+
+APP_PATH = File.expand_path("../../", __FILE__)
+
+begin
+
+  # Get credentials from file
+  CREDENTIALS = YAML.load_file(APP_PATH + "/config/credentials.yml")
+
+  # Set up harvest gateway
+  @harvest_gateway = Harvest.hardy_client(*CREDENTIALS["harvest"].values_at("subdomain", "username", "password"))
+
+  # Output names of all projects
+  puts @harvest_gateway.projects.all.map(&:name).join(', ')
+
+# Handling exceptions
+rescue Harvest::AuthenticationFailed => e
+  puts e
+rescue Errno::ENOENT => e
+  puts e
+end

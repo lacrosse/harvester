@@ -1,0 +1,19 @@
+GEM
+  specs:
+    harvested (0.6.4)
+      hashie (~> 1)
+      httparty
+      json
+    hashie (1.2.0)
+    httparty (0.10.2)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
+    json (1.7.7)
+    multi_json (1.7.2)
+    multi_xml (0.5.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  harvested
