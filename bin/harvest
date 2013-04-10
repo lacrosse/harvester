@@ -1,13 +1,19 @@
 #!/usr/bin/env ruby
+
 require 'yaml'
+require 'bundler/setup'
 APP_PATH = File.expand_path('../../', __FILE__) + '/'
 
 # Set up gateways
 CREDENTIALS = YAML.load_file(APP_PATH + 'config/credentials.yml')
+
 require APP_PATH + 'lib/harvest.rb'
 require APP_PATH + 'lib/google.rb'
+require APP_PATH + 'lib/qbo.rb'
+
 @harvest = Harvest::GATEWAY
 @google = Google::GATEWAY
+@qbo = Qbo::GATEWAY
 
 # Output names of all Harvest projects
 puts "Harvest projects:"
@@ -23,4 +29,12 @@ if spreadsheets = @google.spreadsheets
   puts spreadsheets.map(&:title).join(', ')
 else
   puts "No spreadsheets"
+end
+
+# Output titles of all Google Drive spreadsheets
+puts "QBO collection:"
+if qbo = @qbo.list
+  puts qbo.count
+else
+  puts "No entries"
 end
