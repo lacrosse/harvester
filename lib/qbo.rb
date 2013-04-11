@@ -13,9 +13,22 @@ module Qbo
 
   oauth_client = OAuth::AccessToken.new(qb_oauth_consumer, *CREDENTIALS['account'].values_at('token', 'secret'))
 
-  gate = Quickeebooks::Online::Service::Customer.new
+  gate = Quickeebooks::Online::Service::Account.new
   gate.access_token = oauth_client
   gate.realm_id = CREDENTIALS['account']['realm'].to_i
 
-  GATEWAY = gate
+  ACCOUNTS = gate
+
+  # Returns current balance of configured account
+  def self.account_balance
+    ACCOUNTS.fetch_by_id(CREDENTIALS['account']['bank_account_id'].to_i).current_balance
+  end
+
+  # Outputs all of QBO accounts in the following format:
+  # id  balance  name
+  def self.list_accounts
+    ACCOUNTS.list([], 1, 100).entries.each do |acc|
+      puts "#{acc.id}\t#{acc.current_balance}\t#{acc.name}"
+    end
+  end
 end
