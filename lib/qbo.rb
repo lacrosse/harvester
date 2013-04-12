@@ -20,8 +20,16 @@ module Qbo
   ACCOUNTS = gate
 
   # Returns current balance of configured account
-  def self.account_balance
-    ACCOUNTS.fetch_by_id(CREDENTIALS['account']['bank_account_id'].to_i).current_balance
+  def self.account_balance(id)
+    (balance = ACCOUNTS.fetch_by_id(id).current_balance) ? balance : "nil"
+  end
+
+  def self.balances
+    array = []
+    CREDENTIALS['account']['bank_account_ids'].each do |id|
+      array << [id, account_balance(id)]
+    end
+    array
   end
 
   # Outputs all of QBO accounts in the following format:

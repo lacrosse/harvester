@@ -4,11 +4,26 @@ require_relative '../config/initialize'
 
 @google = Google::GATEWAY
 
+# First row to populate
+j = 1
+
 # Update Google spreadsheet with info
-@google[1,1] = "Harvest outstanding invoices"
-@google[1,2] = Harvest.invoices_total
-@google[2,1] = "QBO bank account balance"
-@google[2,2] = Qbo.account_balance
+@google[j,1] = "Harvest outstanding invoices"
+@google[j,2] = Harvest.invoices_total
+
+Qbo.balances.each do |balance|
+  @google[j += 1, 1] = "QBO account #{balance[0]} current balance"
+  @google[j, 2] = balance[1]
+end
+
+# Flush
+if j < @google.num_rows
+  (j+1..@google.num_rows).each do |cur_row|
+    (1..@google.num_cols).each do |cur_col|
+      @google[cur_row, cur_col] = ""
+    end
+  end
+end
 
 if @google.save()
   puts "Google spreadsheet:"
