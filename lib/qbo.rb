@@ -35,8 +35,12 @@ module Qbo
   # Outputs all of QBO accounts in the following format:
   # id  balance  name
   def self.list_accounts
-    ACCOUNTS.list([], 1, 100).entries.each do |acc|
-      puts "#{acc.id}\t#{acc.current_balance}\t#{acc.name}"
+    i = 1
+    while accs = ACCOUNTS.list([], i, 100).entries and !accs.empty?
+      accs.each do |acc|
+        puts "#{acc.id}\t#{acc.current_balance}\t#{acc.name}"
+      end
+      i += 1
     end
   end
 end
